@@ -1,0 +1,11 @@
+name: moviz_repository
+description: A repository that handles moviz related requests.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.3.3 <4.0.0'
+
+dependencies:
+  moviz_api:
+    path: ../moviz_api

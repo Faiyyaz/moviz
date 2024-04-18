@@ -1,0 +1,14 @@
+name: dio_moviz_api
+description: A Flutter implementation of the MovizApi that uses dio.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: '>=3.3.3 <4.0.0'
+
+dependencies:
+  dio: ^5.4.2+1
+  meta: 1.11.0
+  moviz_api:
+    path: ../moviz_api
+  rxdart: ^0.27.7
