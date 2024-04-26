@@ -3,25 +3,32 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moviz/app/app.dart';
 import 'package:moviz/app/app_bloc_observer.dart';
+import 'package:moviz/router.dart';
 import 'package:moviz_api/moviz_api.dart';
 import 'package:moviz_repository/moviz_repository.dart';
 
 void bootstrap({required MovizApi movizApi}) {
-  FlutterError.onError = (details) {
-    log(details.exceptionAsString(), stackTrace: details.stack);
-  };
+  runZonedGuarded(() async {
+    final movizRepository = MovizRepository(movizApi: movizApi);
+    final GoRouter router = goRouter;
 
-  Bloc.observer = const AppBlocObserver();
+    WidgetsFlutterBinding.ensureInitialized();
+    runApp(
+      App(
+        movizRepository: movizRepository,
+        router: router,
+      ),
+    );
 
-  final movizRepository = MovizRepository(movizApi: movizApi);
+    Bloc.observer = const AppBlocObserver();
 
-  runZonedGuarded(
-    () {
-      WidgetsFlutterBinding.ensureInitialized();
-      runApp(App(movizRepository: movizRepository));
-    },
-    (error, stackTrace) => log(error.toString(), stackTrace: stackTrace),
-  );
+    FlutterError.onError = (details) {
+      log(details.exceptionAsString(), stackTrace: details.stack);
+    };
+  }, (error, stack) {
+    debugPrint(error.toString());
+  });
 }

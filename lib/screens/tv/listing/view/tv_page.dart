@@ -1,26 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moviz/router.dart';
 import 'package:moviz_repository/moviz_repository.dart';
 
-import '../bloc/moviz_bloc.dart';
+import '../bloc/tv_bloc.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class TvPage extends StatelessWidget {
+  const TvPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => MovizBloc(
+      create: (context) => TvBloc(
         movizRepository: context.read<MovizRepository>(),
-      )..add(const MovizSubscriptionRequested()),
-      child: const MovizView(),
+      )..add(const TvSubscriptionRequested()),
+      child: const TvView(),
     );
   }
 }
 
-class MovizView extends StatelessWidget {
-  const MovizView({super.key});
+class TvView extends StatelessWidget {
+  const TvView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +31,11 @@ class MovizView extends StatelessWidget {
       ),
       body: MultiBlocListener(
         listeners: [
-          BlocListener<MovizBloc, MovizState>(
+          BlocListener<TvBloc, TvState>(
             listenWhen: (previous, current) =>
                 previous.status != current.status,
             listener: (context, state) {
-              if (state.status == MovizStatus.failure) {
+              if (state.status == TvStatus.failure) {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
@@ -46,12 +47,12 @@ class MovizView extends StatelessWidget {
             },
           ),
         ],
-        child: BlocBuilder<MovizBloc, MovizState>(
+        child: BlocBuilder<TvBloc, TvState>(
           builder: (context, state) {
             if (state.moviz.isEmpty) {
-              if (state.status == MovizStatus.loading) {
+              if (state.status == TvStatus.loading) {
                 return const Center(child: CupertinoActivityIndicator());
-              } else if (state.status != MovizStatus.success) {
+              } else if (state.status != TvStatus.success) {
                 return const SizedBox();
               } else {
                 return Center(
@@ -65,7 +66,17 @@ class MovizView extends StatelessWidget {
 
             return CupertinoScrollbar(
               child: ListView(
-                children: [for (final moviz in state.moviz) Text(moviz.name)],
+                children: [
+                  for (final moviz in state.moviz)
+                    GestureDetector(
+                      onTap: () {
+                        goRouter.pushNamed('/tvDetails');
+                      },
+                      child: Text(
+                        moviz.name,
+                      ),
+                    )
+                ],
               ),
             );
           },

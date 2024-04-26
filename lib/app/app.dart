@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:moviz_repository/moviz_repository.dart';
 
-import '../home/view/home_page.dart';
-
 class App extends StatelessWidget {
-  const App({required this.movizRepository, super.key});
+  const App({
+    required this.movizRepository,
+    super.key,
+    required this.router,
+  });
 
   final MovizRepository movizRepository;
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
     return RepositoryProvider.value(
       value: movizRepository,
-      child: const AppView(),
+      child: AppView(router: router),
     );
   }
 }
 
 class AppView extends StatelessWidget {
-  const AppView({super.key});
+  const AppView({super.key, required this.router});
+
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
+    return MaterialApp.router(
+      routerConfig: router,
     );
   }
 }

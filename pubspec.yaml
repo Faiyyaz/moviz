@@ -38,6 +38,8 @@ dependencies:
   bloc: ^8.1.4
   flutter_bloc: ^8.1.5
   equatable: ^2.0.5
+  go_router: ^14.0.1
+
   dio_moviz_api:
     path: packages/dio_moviz_api
   moviz_api:
